@@ -8,43 +8,44 @@ class ListTransaction extends StatelessWidget {
   final List<Transaction> transactions;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: transactions
-          .map((tex) => Card(
-                child: Row(
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            border: Border.all(width: 2, color: Colors.blue),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Text(
-                          tex.amount.toString(),
-                          style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue),
-                        )),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tex.title,
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          DateFormat('yyyy-MM-dd').format(tex.date),
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 14),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ))
-          .toList(),
-    );
+    return SizedBox(
+        height: 400,
+        child: ListView.builder(
+            itemCount: transactions.length,
+            itemBuilder: (ctx, index) => Card(
+                  child: Row(
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 2, color: Colors.blue),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Text(
+                            transactions[index].amount.toString(),
+                            style: const TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
+                          )),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            transactions[index].title,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            DateFormat('yyyy-MM-dd')
+                                .format(transactions[index].date),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )));
   }
 }
