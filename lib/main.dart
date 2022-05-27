@@ -13,7 +13,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+          primarySwatch: Colors.purple,
+          accentColor: Colors.amber,
+          textTheme: TextTheme(
+            headline6: TextStyle(
+                fontFamily: 'Quicksand',
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+            subtitle1: TextStyle(
+              fontFamily: 'Quicksand',
+              fontSize: 13,
+            ),
+          ),
+          appBarTheme: AppBarTheme(
+              titleTextStyle: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold))),
       home: ExpenseApp(),
     );
   }
@@ -60,7 +78,10 @@ class _ExpenseAppState extends State<ExpenseApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Expense App'),
+        title: const Text(
+          'Personal Expense',
+          style: TextStyle(fontFamily: 'OpenSans'),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

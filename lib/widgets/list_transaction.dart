@@ -33,15 +33,12 @@ class ListTransaction extends StatelessWidget {
                         children: [
                           Text(
                             transactions[index].title,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.headline6,
                           ),
                           Text(
-                            DateFormat('yyyy-MM-dd')
-                                .format(transactions[index].date),
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 14),
-                          )
+                              DateFormat('yyyy-MM-dd')
+                                  .format(transactions[index].date),
+                              style: Theme.of(context).textTheme.subtitle1)
                         ],
                       )
                     ],
