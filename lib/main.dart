@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           textTheme: const TextTheme(
             headline6: TextStyle(
-                fontFamily: 'Quicksand',
+                fontFamily: 'OpenSans',
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
             subtitle1: TextStyle(
@@ -44,12 +44,7 @@ class ExpenseApp extends StatefulWidget {
 }
 
 class _ExpenseAppState extends State<ExpenseApp> {
-  final List<Transaction> _userTransactions = [
-    // Transaction(
-    //     id: 't1', title: 'New shoes', amount: 20.99, date: DateTime.now()),
-    // Transaction(
-    //     id: 't2', title: 'sweater', amount: 16.99, date: DateTime.now()),
-  ];
+  final List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
@@ -57,15 +52,12 @@ class _ExpenseAppState extends State<ExpenseApp> {
     }).toList();
   }
 
-  _addNewTransaction(
-    String newTitle,
-    double newAmount,
-  ) {
+  _addNewTransaction(String newTitle, double newAmount, DateTime chosenDate) {
     final addTransaction = Transaction(
         id: DateTime.now().toString(),
         title: newTitle,
         amount: newAmount,
-        date: DateTime.now());
+        date: chosenDate);
     setState(() {
       _userTransactions.add(addTransaction);
     });
@@ -79,6 +71,12 @@ class _ExpenseAppState extends State<ExpenseApp> {
             ));
   }
 
+  _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,34 +87,16 @@ class _ExpenseAppState extends State<ExpenseApp> {
         ),
         centerTitle: true,
       ),
-      body: Column(
+      body: SingleChildScrollView(
+          child: Column(
         children: [
           Chart(recentTransaction: _recentTransaction),
-          SingleChildScrollView(
-              child: _userTransactions.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 200,
-                            width: 200,
-                            child: Image.asset(
-                              'assets/images/z.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const Text('No Transaction')
-                        ],
-                      ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                          ListTransaction(transactions: _userTransactions)
-                        ])),
+          ListTransaction(
+            transactions: _userTransactions,
+            deleteTx: _deleteTransaction,
+          ),
         ],
-      ),
+      )),
       floatingActionButton: FloatingActionButton(
           enableFeedback: true,
           child: const Icon(Icons.add),
