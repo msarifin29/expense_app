@@ -1,3 +1,4 @@
+import 'package:expense_app/widgets/chart.dart';
 import 'package:expense_app/widgets/new_transaction.dart';
 
 import 'package:flutter/material.dart';
@@ -15,9 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.amber,
-          textTheme: TextTheme(
+          textTheme: const TextTheme(
             headline6: TextStyle(
                 fontFamily: 'Quicksand',
                 fontSize: 18,
@@ -27,12 +26,14 @@ class MyApp extends StatelessWidget {
               fontSize: 13,
             ),
           ),
-          appBarTheme: AppBarTheme(
+          appBarTheme: const AppBarTheme(
               titleTextStyle: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 20,
-                  fontWeight: FontWeight.bold))),
-      home: ExpenseApp(),
+                  fontWeight: FontWeight.bold)),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
+              .copyWith(secondary: Colors.amber)),
+      home: const ExpenseApp(),
     );
   }
 }
@@ -46,11 +47,17 @@ class ExpenseApp extends StatefulWidget {
 
 class _ExpenseAppState extends State<ExpenseApp> {
   final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 't1', title: 'New shoes', amount: 20.99, date: DateTime.now()),
-    Transaction(
-        id: 't2', title: 'sweater', amount: 16.99, date: DateTime.now()),
+    // Transaction(
+    //     id: 't1', title: 'New shoes', amount: 20.99, date: DateTime.now()),
+    // Transaction(
+    //     id: 't2', title: 'sweater', amount: 16.99, date: DateTime.now()),
   ];
+
+  List<Transaction> get _recentTransaction {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7)));
+    }).toList();
+  }
 
   _addNewTransaction(
     String newTitle,
@@ -84,21 +91,30 @@ class _ExpenseAppState extends State<ExpenseApp> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Card(
-          elevation: 10,
-          child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.blue,
+      body: _userTransactions.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 200,
+                    width: 200,
+                    child: Image.asset(
+                      'assets/images/z.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const Text('No Transaction')
+                ],
               ),
-              width: double.infinity,
-              child: const Text('Expense')),
-        ),
-        ListTransaction(transactions: _userTransactions)
-      ])),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                  Chart(recentTransaction: _recentTransaction),
+                  ListTransaction(transactions: _userTransactions)
+                ])),
       floatingActionButton: FloatingActionButton(
           enableFeedback: true,
           child: const Icon(Icons.add),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/transaction.dart';
 
 class NewTransaction extends StatefulWidget {
-  NewTransaction({Key? key, required this.addNewTx}) : super(key: key);
+  const NewTransaction({Key? key, required this.addNewTx}) : super(key: key);
   final Function addNewTx;
 
   @override
@@ -36,11 +35,12 @@ class _NewTransactionState extends State<NewTransaction> {
           onSubmitted: (_) => addNewTransaction,
         ),
         TextField(
-            decoration: InputDecoration(label: Text('Amount')),
+            decoration: const InputDecoration(label: Text('Amount')),
             keyboardType: TextInputType.number,
             controller: amountController,
             onSubmitted: (_) => addNewTransaction),
-        TextButton(onPressed: addNewTransaction, child: Text('Add Transaction'))
+        TextButton(
+            onPressed: addNewTransaction, child: const Text('Add Transaction'))
       ]),
     );
   }
