@@ -69,7 +69,7 @@ class _NewTransactionState extends State<NewTransaction> {
                   : 'Picked Date : ${DateFormat.yMEd().format(_selectDateTime!)}'),
               TextButton(
                 onPressed: _showDateTime,
-                child: Text(
+                child: const Text(
                   'Chosen Date',
                   style: TextStyle(color: Colors.blue),
                 ),
