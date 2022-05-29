@@ -22,9 +22,7 @@ class MyApp extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
             subtitle1: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 13,
-            ),
+                fontFamily: 'Quicksand', fontSize: 13, color: Colors.grey),
           ),
           appBarTheme: const AppBarTheme(
               titleTextStyle: TextStyle(
@@ -91,30 +89,34 @@ class _ExpenseAppState extends State<ExpenseApp> {
         ),
         centerTitle: true,
       ),
-      body: _userTransactions.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: Image.asset(
-                      'assets/images/z.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const Text('No Transaction')
-                ],
-              ),
-            )
-          : SingleChildScrollView(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                  Chart(recentTransaction: _recentTransaction),
-                  ListTransaction(transactions: _userTransactions)
-                ])),
+      body: Column(
+        children: [
+          Chart(recentTransaction: _recentTransaction),
+          SingleChildScrollView(
+              child: _userTransactions.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 200,
+                            width: 200,
+                            child: Image.asset(
+                              'assets/images/z.png',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const Text('No Transaction')
+                        ],
+                      ),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                          ListTransaction(transactions: _userTransactions)
+                        ])),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
           enableFeedback: true,
           child: const Icon(Icons.add),

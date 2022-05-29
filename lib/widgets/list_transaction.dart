@@ -13,36 +13,22 @@ class ListTransaction extends StatelessWidget {
         child: ListView.builder(
             itemCount: transactions.length,
             itemBuilder: (ctx, index) => Card(
-                  child: Row(
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 2, color: Colors.blue),
-                              borderRadius: BorderRadius.circular(5)),
+                  child: ListTile(
+                      leading: CircleAvatar(
+                        child: FittedBox(
                           child: Text(
-                            '\$${transactions[index].amount.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
-                          )),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            transactions[index].title,
-                            style: Theme.of(context).textTheme.headline6,
+                            '\$${transactions[index].amount}',
                           ),
-                          Text(
-                              DateFormat('yyyy-MM-dd')
-                                  .format(transactions[index].date),
-                              style: Theme.of(context).textTheme.subtitle1)
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                      ),
+                      title: Text(
+                        transactions[index].title,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      subtitle: Text(
+                          DateFormat('yyyy-MM-dd')
+                              .format(transactions[index].date),
+                          style: Theme.of(context).textTheme.subtitle1)),
                 )));
   }
 }
