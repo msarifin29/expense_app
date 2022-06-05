@@ -44,14 +44,8 @@ class ExpenseApp extends StatefulWidget {
 }
 
 class _ExpenseAppState extends State<ExpenseApp> {
+  bool _showChart = false;
   final List<Transaction> _userTransactions = [];
-  final appBar = AppBar(
-    title: const Text(
-      'Personal Expense',
-      style: TextStyle(fontFamily: 'OpenSans'),
-    ),
-    centerTitle: true,
-  );
 
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
@@ -86,26 +80,63 @@ class _ExpenseAppState extends State<ExpenseApp> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final appBar = AppBar(
+      title: const Text(
+        'Personal Expense',
+        style: TextStyle(fontFamily: 'OpenSans'),
+      ),
+      centerTitle: true,
+    );
+
+    final txListWidget = SizedBox(
+      height:
+          (MediaQuery.of(context).size.height - appBar.preferredSize.height) *
+              0.7,
+      child: ListTransaction(
+        transactions: _userTransactions,
+        deleteTx: _deleteTransaction,
+      ),
+    );
+
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
           child: Column(
         children: [
-          SizedBox(
-              height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height -
-                      MediaQuery.of(context).padding.top) *
-                  0.4,
-              child: Chart(recentTransaction: _recentTransaction)),
-          SizedBox(
-            height: (MediaQuery.of(context).size.height -
-                    appBar.preferredSize.height) *
-                0.6,
-            child: ListTransaction(
-              transactions: _userTransactions,
-              deleteTx: _deleteTransaction,
+          if (isLandscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('show chart'),
+                Switch(
+                  value: true,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                )
+              ],
             ),
-          ),
+          if (!isLandscape)
+            SizedBox(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(recentTransaction: _recentTransaction)),
+          if (!isLandscape) txListWidget,
+          if (isLandscape)
+            _showChart
+                ? SizedBox(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.7)
+                : txListWidget,
         ],
       )),
       floatingActionButton: FloatingActionButton(

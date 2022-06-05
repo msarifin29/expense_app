@@ -12,23 +12,24 @@ class ListTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
         child: transactions.isEmpty
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text(
-                    'No Transaction',
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: Image.asset(
-                      'assets/images/z.png',
-                      fit: BoxFit.cover,
+            ? LayoutBuilder(builder: (context, constraints) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text(
+                      'No Transaction',
+                      style: TextStyle(fontSize: 30),
                     ),
-                  ),
-                ],
-              )
+                    SizedBox(
+                      height: constraints.maxHeight * 0.7,
+                      child: Image.asset(
+                        'assets/images/z.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
+                );
+              })
             : ListView.builder(
                 itemCount: transactions.length,
                 itemBuilder: (ctx, index) => Card(
