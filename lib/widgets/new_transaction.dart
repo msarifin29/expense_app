@@ -46,43 +46,45 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        TextField(
-          decoration: const InputDecoration(label: Text('Title')),
-          keyboardType: TextInputType.text,
-          controller: titleController,
-          onSubmitted: (_) => addNewTransaction,
-        ),
-        TextField(
-            decoration: const InputDecoration(label: Text('Amount')),
-            keyboardType: TextInputType.number,
-            controller: amountController,
-            onSubmitted: (_) => addNewTransaction),
-        SizedBox(
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(_selectDateTime == null
-                  ? 'No Data Chosen !'
-                  : 'Picked Date : ${DateFormat.yMEd().format(_selectDateTime!)}'),
-              TextButton(
-                onPressed: _showDateTime,
-                child: const Text(
-                  'Chosen Date',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-            ],
+    return SingleChildScrollView(
+      child: Card(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          TextField(
+            decoration: const InputDecoration(label: Text('Title')),
+            keyboardType: TextInputType.text,
+            controller: titleController,
+            onSubmitted: (_) => addNewTransaction,
           ),
-        ),
-        ElevatedButton(
-            onPressed: addNewTransaction,
-            child: const Text(
-              'Add Transaction',
-            )),
-      ]),
+          TextField(
+              decoration: const InputDecoration(label: Text('Amount')),
+              keyboardType: TextInputType.number,
+              controller: amountController,
+              onSubmitted: (_) => addNewTransaction),
+          SizedBox(
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(_selectDateTime == null
+                    ? 'No Data Chosen !'
+                    : 'Picked Date : ${DateFormat.yMEd().format(_selectDateTime!)}'),
+                TextButton(
+                  onPressed: _showDateTime,
+                  child: const Text(
+                    'Chosen Date',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+              onPressed: addNewTransaction,
+              child: const Text(
+                'Add Transaction',
+              )),
+        ]),
+      ),
     );
   }
 }
