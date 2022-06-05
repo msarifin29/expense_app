@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expense_app/widgets/chart.dart';
 import 'package:expense_app/widgets/new_transaction.dart';
 
@@ -15,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           textTheme: const TextTheme(
             headline6: TextStyle(
@@ -89,6 +92,12 @@ class _ExpenseAppState extends State<ExpenseApp> {
         style: TextStyle(fontFamily: 'OpenSans'),
       ),
       centerTitle: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () => _startNewTransaction(context),
+        )
+      ],
     );
 
     final txListWidget = SizedBox(
@@ -109,7 +118,8 @@ class _ExpenseAppState extends State<ExpenseApp> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('show chart'),
-                Switch(
+                Switch.adaptive(
+                  activeColor: Theme.of(context).colorScheme.secondary,
                   value: true,
                   onChanged: (value) {
                     setState(() {
@@ -137,10 +147,12 @@ class _ExpenseAppState extends State<ExpenseApp> {
                 : txListWidget,
         ],
       )),
-      floatingActionButton: FloatingActionButton(
-          enableFeedback: true,
-          child: const Icon(Icons.add),
-          onPressed: () => _startNewTransaction(context)),
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              enableFeedback: true,
+              child: const Icon(Icons.add),
+              onPressed: () => _startNewTransaction(context)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
