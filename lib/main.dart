@@ -45,6 +45,13 @@ class ExpenseApp extends StatefulWidget {
 
 class _ExpenseAppState extends State<ExpenseApp> {
   final List<Transaction> _userTransactions = [];
+  final appBar = AppBar(
+    title: const Text(
+      'Personal Expense',
+      style: TextStyle(fontFamily: 'OpenSans'),
+    ),
+    centerTitle: true,
+  );
 
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
@@ -80,20 +87,24 @@ class _ExpenseAppState extends State<ExpenseApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Personal Expense',
-          style: TextStyle(fontFamily: 'OpenSans'),
-        ),
-        centerTitle: true,
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
           child: Column(
         children: [
-          Chart(recentTransaction: _recentTransaction),
-          ListTransaction(
-            transactions: _userTransactions,
-            deleteTx: _deleteTransaction,
+          SizedBox(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.4,
+              child: Chart(recentTransaction: _recentTransaction)),
+          SizedBox(
+            height: (MediaQuery.of(context).size.height -
+                    appBar.preferredSize.height) *
+                0.6,
+            child: ListTransaction(
+              transactions: _userTransactions,
+              deleteTx: _deleteTransaction,
+            ),
           ),
         ],
       )),

@@ -11,7 +11,6 @@ class ListTransaction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 500,
         child: transactions.isEmpty
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
