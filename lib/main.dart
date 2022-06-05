@@ -80,8 +80,8 @@ class _ExpenseAppState extends State<ExpenseApp> {
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediQuery = MediaQuery.of(context);
+    final isLandscape = mediQuery.orientation == Orientation.landscape;
 
     final appBar = AppBar(
       title: const Text(
@@ -92,9 +92,7 @@ class _ExpenseAppState extends State<ExpenseApp> {
     );
 
     final txListWidget = SizedBox(
-      height:
-          (MediaQuery.of(context).size.height - appBar.preferredSize.height) *
-              0.7,
+      height: (mediQuery.size.height - appBar.preferredSize.height) * 0.7,
       child: ListTransaction(
         transactions: _userTransactions,
         deleteTx: _deleteTransaction,
@@ -123,18 +121,18 @@ class _ExpenseAppState extends State<ExpenseApp> {
             ),
           if (!isLandscape)
             SizedBox(
-                height: (MediaQuery.of(context).size.height -
+                height: (mediQuery.size.height -
                         appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
+                        mediQuery.padding.top) *
                     0.3,
                 child: Chart(recentTransaction: _recentTransaction)),
           if (!isLandscape) txListWidget,
           if (isLandscape)
             _showChart
                 ? SizedBox(
-                    height: (MediaQuery.of(context).size.height -
+                    height: (mediQuery.size.height -
                             appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
+                            mediQuery.padding.top) *
                         0.7)
                 : txListWidget,
         ],

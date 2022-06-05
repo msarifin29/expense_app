@@ -49,12 +49,24 @@ class ListTransaction extends StatelessWidget {
                             DateFormat('yyyy-MM-dd')
                                 .format(transactions[index].date),
                             style: Theme.of(context).textTheme.subtitle1),
-                        trailing: IconButton(
-                            onPressed: () => deleteTx(transactions[index].id),
-                            icon: Icon(
-                              Icons.delete,
-                              color: Theme.of(context).errorColor,
-                            )),
+                        trailing: MediaQuery.of(context).size.width > 460
+                            ? TextButton.icon(
+                                onPressed: () =>
+                                    deleteTx(transactions[index].id),
+                                icon: Icon(Icons.delete),
+                                label: Text('Delete'),
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.red)),
+                              )
+                            : IconButton(
+                                onPressed: () =>
+                                    deleteTx(transactions[index].id),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Theme.of(context).errorColor,
+                                )),
                       ),
                     )));
   }
