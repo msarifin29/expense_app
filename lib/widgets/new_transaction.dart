@@ -1,3 +1,4 @@
+import 'package:expense_app/widgets/adaptive_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -84,11 +85,8 @@ class _NewTransactionState extends State<NewTransaction> {
                 ],
               ),
             ),
-            ElevatedButton(
-                onPressed: addNewTransaction,
-                child: const Text(
-                  'Add Transaction',
-                )),
+            AdaptiveButton(
+                text: 'Add New Transaction', handler: addNewTransaction)
           ]),
         ),
       ),

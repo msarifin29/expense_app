@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:expense_app/widgets/chart.dart';
 import 'package:expense_app/widgets/new_transaction.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import './models/transaction.dart';
@@ -16,26 +17,48 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          textTheme: const TextTheme(
-            headline6: TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
-            subtitle1: TextStyle(
-                fontFamily: 'Quicksand', fontSize: 13, color: Colors.grey),
-          ),
-          appBarTheme: const AppBarTheme(
-              titleTextStyle: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
-              .copyWith(secondary: Colors.amber)),
-      home: const ExpenseApp(),
-    );
+    return Platform.isIOS
+        ? const CupertinoApp(
+            theme: CupertinoThemeData(
+                textTheme: CupertinoTextThemeData(
+                    tabLabelTextStyle: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                    navActionTextStyle: TextStyle(
+                        fontFamily: 'Quicksand',
+                        fontSize: 13,
+                        color: Colors.grey),
+                    navLargeTitleTextStyle: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                primaryColor: Colors.grey,
+                primaryContrastingColor: Colors.amber),
+            home: ExpenseApp(),
+          )
+        : MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                textTheme: const TextTheme(
+                  headline6: TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                  subtitle1: TextStyle(
+                      fontFamily: 'Quicksand',
+                      fontSize: 13,
+                      color: Colors.grey),
+                ),
+                appBarTheme: const AppBarTheme(
+                    titleTextStyle: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+                colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
+                    .copyWith(secondary: Colors.amber)),
+            home: const ExpenseApp(),
+          );
   }
 }
 
@@ -86,19 +109,36 @@ class _ExpenseAppState extends State<ExpenseApp> {
     final mediQuery = MediaQuery.of(context);
     final isLandscape = mediQuery.orientation == Orientation.landscape;
 
-    final appBar = AppBar(
-      title: const Text(
-        'Personal Expense',
-        style: TextStyle(fontFamily: 'OpenSans'),
-      ),
-      centerTitle: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () => _startNewTransaction(context),
-        )
-      ],
-    );
+    final PreferredSizeWidget appBar;
+    if (Platform.isIOS) {
+      appBar = CupertinoNavigationBar(
+        middle: const Text(
+          'Personal Expense',
+          style: TextStyle(fontFamily: 'OpenSans'),
+        ),
+        trailing: Row(
+          children: [
+            GestureDetector(
+              onTap: () => _startNewTransaction(context),
+              child: const Icon(CupertinoIcons.add),
+            )
+          ],
+        ),
+      );
+    } else {
+      appBar = AppBar(
+        title: const Text(
+          'Personal Expense',
+          style: TextStyle(fontFamily: 'OpenSans'),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => _startNewTransaction(context),
+          )
+        ],
+      );
+    }
 
     final txListWidget = SizedBox(
       height: (mediQuery.size.height - appBar.preferredSize.height) * 0.7,
@@ -108,52 +148,59 @@ class _ExpenseAppState extends State<ExpenseApp> {
       ),
     );
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
-          child: Column(
-        children: [
-          if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('show chart'),
-                Switch.adaptive(
-                  activeColor: Theme.of(context).colorScheme.secondary,
-                  value: true,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                )
-              ],
-            ),
-          if (!isLandscape)
-            SizedBox(
-                height: (mediQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediQuery.padding.top) *
-                    0.3,
-                child: Chart(recentTransaction: _recentTransaction)),
-          if (!isLandscape) txListWidget,
-          if (isLandscape)
-            _showChart
-                ? SizedBox(
-                    height: (mediQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediQuery.padding.top) *
-                        0.7)
-                : txListWidget,
-        ],
-      )),
-      floatingActionButton: Platform.isIOS
-          ? Container()
-          : FloatingActionButton(
-              enableFeedback: true,
-              child: const Icon(Icons.add),
-              onPressed: () => _startNewTransaction(context)),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+    final pageBody = SingleChildScrollView(
+        child: Column(
+      children: [
+        if (isLandscape)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('show chart'),
+              Switch.adaptive(
+                activeColor: Theme.of(context).colorScheme.secondary,
+                value: true,
+                onChanged: (value) {
+                  setState(() {
+                    _showChart = value;
+                  });
+                },
+              )
+            ],
+          ),
+        if (!isLandscape)
+          SizedBox(
+              height: (mediQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediQuery.padding.top) *
+                  0.3,
+              child: Chart(recentTransaction: _recentTransaction)),
+        if (!isLandscape) txListWidget,
+        if (isLandscape)
+          _showChart
+              ? SizedBox(
+                  height: (mediQuery.size.height -
+                          appBar.preferredSize.height -
+                          mediQuery.padding.top) *
+                      0.7)
+              : txListWidget,
+      ],
+    ));
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    enableFeedback: true,
+                    child: const Icon(Icons.add),
+                    onPressed: () => _startNewTransaction(context)),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+          );
   }
 }
